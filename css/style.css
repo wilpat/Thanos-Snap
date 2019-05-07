@@ -29,7 +29,7 @@ body {
 	font-size: 36px;
 	padding: 20px 40px 20px 80px;
 	border-radius: 10px;
-	background: url('gauntlet.jpg') white 15px no-repeat;
+	background: url('../images/gauntlet.jpg') white 15px no-repeat;
 	background-size: 50px;
 }
 
