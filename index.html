@@ -5,6 +5,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="css/style.css">
 	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<script src="js/html2canvas.min.js"></script>
+
 	
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -19,7 +21,7 @@
 	  </a>
 	</nav>
 	<div id="app">
-		<section class="hero d-flex justify-content-center align-items-center" v-if="!begin">
+		<section class="hero d-flex justify-content-center align-items-center" v-if="!begin" style="display: none">
 			 <button type="button" class="btn btn-outline-info mr-4">Upload Image</button>
 			 <button type="button" class="btn btn-outline-success" @click="begin = true">Use Default</button>
 		</section>
@@ -38,7 +40,6 @@
 		</main>
 		
 	</div>
-	<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.18/chance.min.js"></script>
 
