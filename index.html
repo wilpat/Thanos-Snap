@@ -90,52 +90,55 @@
 		  				alert('Still loading, hold on.');
 		  			}else{
 		  				this.click.play();
-						let pixelArr = this.imageData.data;
+		  				let imageData = this.imageData;
+		  				let canvas = this.canvas;
+		  				let fade = this.fade;
+		  				setTimeout(function() {
+							let pixelArr = imageData.data;
 
-						createBlankImageData(this.imageData);
+							createBlankImageData(imageData);
 
-						// Put the pixel info of imageDataArray into a weighted Distribution
-						for (let i = 0; i < pixelArr.length; i+=4) {
-							//Find the highest probability that canvas should be in
-							let p = Math.floor((i/pixelArr.length) * canvasCount);
+							// Put the pixel info of imageDataArray into a weighted Distribution
+							for (let i = 0; i < pixelArr.length; i+=4) {
+								//Find the highest probability that canvas should be in
+								let p = Math.floor((i/pixelArr.length) * canvasCount);
 
-							let a = imageDataArray[weightedRandomDistrib(p)];
-							a[i] = pixelArr[i];
-							a[i+1] = pixelArr[i+1];
-							a[i+2] = pixelArr[i+2];
-							a[i+3] = pixelArr[i+3];
-						}
+								let a = imageDataArray[weightedRandomDistrib(p)];
+								a[i] = pixelArr[i];
+								a[i+1] = pixelArr[i+1];
+								a[i+2] = pixelArr[i+2];
+								a[i+3] = pixelArr[i+3];
+							}
 
-						//Create canvas for each imageData and append to target element
-						for(let i = 0; i < canvasCount; i++){
-							let c = newCanvasFromImageData(imageDataArray[i], this.canvas.width, this.canvas.height);
-							c.classList.add('dust');
-							$('.wrapper').append(c);
-						}
+							//Create canvas for each imageData and append to target element
+							for(let i = 0; i < canvasCount; i++){
+								let c = newCanvasFromImageData(imageDataArray[i], canvas.width, canvas.height);
+								c.classList.add('dust');
+								$('.wrapper').append(c);
+							}
 
-						//Clear all children except the canvas
-						$('.content').children().not('dust').fadeOut(3500);
+							//Clear all children except the canvas
+							$('.content').children().not('dust').fadeOut(3500);
 
-						//Apply animation
-						$('.dust').each(function(index){
-							animateBlur($(this), 0.8, 800);
+							//Apply animation
+							$('.dust').each(function(index){
+								animateBlur($(this), 0.8, 800);
 
-							setTimeout(() =>{
-								animateTransform( $(this), 100, -100, chance.integer({min:-15, max: 15 }), 800 + (110 * index) );
-							}, 70 * index);
+								setTimeout(() =>{
+									animateTransform( $(this), 100, -100, chance.integer({min:-15, max: 15 }), 800 + (110 * index) );
+								}, 70 * index);
 
-							// Remove the canvas from DOM tree when faded
-							$(this).delay(70 * index).fadeOut( (110 * index) + 800, 'easeInQuint', () => {
-								$(this).remove();
+								// Remove the canvas from DOM tree when faded
+								$(this).delay(70 * index).fadeOut( (110 * index) + 800, 'easeInQuint', () => {
+									$(this).remove();
+								});
 							});
-						});
-						setTimeout(function() {
-							this.fade.play();
+							fade.play();
 						}, 1500);
 						
 						setTimeout(() =>{
 							this.repeat = true;
-						},3500)
+						},5000)
 		  			}
 					
 
