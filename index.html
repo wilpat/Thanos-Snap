@@ -129,7 +129,10 @@
 								$(this).remove();
 							});
 						});
-						this.fade.play();
+						setTimeout(function() {
+							this.fade.play();
+						}, 1500);
+						
 						setTimeout(() =>{
 							this.repeat = true;
 						},3500)
