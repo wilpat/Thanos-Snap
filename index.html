@@ -55,7 +55,7 @@
 		var app = new Vue({
 		  el: '#app',
 		  data: {
-		    begin: false,
+		    begin: true,
 		    repeat: false
 		  },
 		  methods:{
@@ -65,7 +65,7 @@
 		  	},
 
 		  	snap: async function (){
-			  		await html2canvas($('.content')[0]).then(canvas =>{
+			  		html2canvas($('.content')[0]).then(canvas =>{
 						ctx = canvas.getContext('2d');
 						let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 						let pixelArr = imageData.data;
@@ -104,12 +104,16 @@
 
 							// Remove the canvas from DOM tree when faded
 							$(this).delay(70 * index).fadeOut( (110 * index) + 800, 'easeInQuint', () => {
-								$(this).remove();} );
+								$(this).remove();
 							});
 						});
-						this.repeat = true;
+					}).then(() =>{
+						setTimeout(() =>{
+							this.repeat = true;
+						},3500)
+					});
 
-			  		}
+		  		}
 		  	}
 		})
 		let imageDataArray = [];
