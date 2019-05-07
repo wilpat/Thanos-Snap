@@ -56,15 +56,20 @@
 		  el: '#app',
 		  data: {
 		    begin: true,
-		    repeat: false
+		    repeat: false,
+		    click: new Audio('audio/click.mp3'),
+		    fade: new Audio('audio/fade.mp3'),
+		    undo: new Audio('audio/undo.wav'),
 		  },
 		  methods:{
 		  	doOver: function() {
+		  		this.undo.play();
 		  		$('.content').children().not('dust').fadeIn(2500);
 				this.repeat = false
 		  	},
 
 		  	snap: async function (){
+					this.click.play();
 			  		html2canvas($('.content')[0]).then(canvas =>{
 						ctx = canvas.getContext('2d');
 						let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
@@ -108,6 +113,7 @@
 							});
 						});
 					}).then(() =>{
+						this.fade.play();
 						setTimeout(() =>{
 							this.repeat = true;
 						},3500)
