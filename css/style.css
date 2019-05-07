@@ -3,11 +3,15 @@
 }
 body {
   margin: 0;
+  padding: 0;
   min-height: 100vh;
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
   background: #ddd;
+}
+.hero{
+	height: calc(100vh - 4rem);
 }
 .wrapper{
 	display: flex;
@@ -22,14 +26,22 @@ body {
 	align-items: center;
 	flex-direction: column;
 	position: relative;
-	background: #ddd;
+	/*background: #ddd;*/
 }
 
-#start-btn{
+.start-btn{
 	font-size: 36px;
 	padding: 20px 40px 20px 80px;
 	border-radius: 10px;
-	background: url('../images/gauntlet.jpg') white 15px no-repeat;
+	background: url('../images/gauntlet.png') white 15px no-repeat;
+	background-size: 50px;
+}
+.repeat{
+	font-size: 36px;
+	color: #fff;
+	padding: 20px 40px 20px 80px;
+	border-radius: 10px;
+	background: url('../images/irongaunt.jpg') #000 15px no-repeat;
 	background-size: 50px;
 }
 

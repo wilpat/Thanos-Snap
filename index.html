@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="css/style.css">
 
 	<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
@@ -11,67 +12,109 @@
 	<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 	<title>Thanos Snap</title>
 </head>
 <body>
-	<div class="navbar">
-		<span>Thanos'Snap Effect Tutorial</span>
-	</div>
+	<nav class="navbar navbar-light bg-light">
+	  <a class="navbar-brand" href="#">
+	    <img src="images/gauntlet.png" width="30" height="30" class="d-inline-block align-top" alt="">
+	   	Snap!
+	  </a>
+	</nav>
+	<div id="app">
+		<section class="hero d-flex justify-content-center align-items-center" v-if="!begin">
+			 <button type="button" class="btn btn-outline-info mr-4">Upload Image</button>
+			 <button type="button" class="btn btn-outline-success" @click="begin = true">Use Default</button>
+		</section>
+		<main v-else>
+			
+			<div class="wrapper">
+				<div class="content">
+					<img src="images/burger1.png" alt="burger" width="500">
+					<button class="start-btn" @click="snap">Snap!</button>
+				</div>
+			</div>
+			<div class="hero d-flex justify-content-center align-items-center" v-if="repeat">
+				<button class="repeat" @click="doOver">Undo</button>
+			</div>
 
-	<div class="wrapper">
-		<div class="content">
-			<img src="images/burger.png" alt="burger" width="500">
-			<button id="start-btn">Snap!</button>
-		</div>
+		</main>
+		
 	</div>
+	
 	<script>
+		var app = new Vue({
+		  el: '#app',
+		  data: {
+		    begin: true,
+		    repeat: false
+		  },
+		  methods:{
+		  	doOver: function() {
+		  		$('.content').children().not('dust').fadeIn(2500);
+				this.repeat = false
+		  	},
+
+		  	snap: async function (){
+			  		await html2canvas($('.content')[0]).then(canvas =>{
+						ctx = canvas.getContext('2d');
+						let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+						let pixelArr = imageData.data;
+
+						createBlankImageData(imageData);
+
+						// Put the pixel info of imageDataArray into a weighted Distribution
+						for (let i = 0; i < pixelArr.length; i+=4) {
+							//Find the highest probability that canvas should be in
+							let p = Math.floor((i/pixelArr.length) * canvasCount);
+
+							let a = imageDataArray[weightedRandomDistrib(p)];
+							a[i] = pixelArr[i];
+							a[i+1] = pixelArr[i+1];
+							a[i+2] = pixelArr[i+2];
+							a[i+3] = pixelArr[i+3];
+						}
+
+						//Create canvas for each imageData and append to target element
+						for(let i = 0; i < canvasCount; i++){
+							let c = newCanvasFromImageData(imageDataArray[i], canvas.width, canvas.height);
+							c.classList.add('dust');
+							$('.wrapper').append(c);
+						}
+
+						//Clear all children except the canvas
+						$('.content').children().not('dust').fadeOut(3500);
+
+						//Apply animation
+						$('.dust').each(function(index){
+							animateBlur($(this), 0.8, 800);
+
+							setTimeout(() =>{
+								animateTransform( $(this), 100, -100, chance.integer({min:-15, max: 15 }), 800 + (110 * index) );
+							}, 70 * index);
+
+							// Remove the canvas from DOM tree when faded
+							$(this).delay(70 * index).fadeOut( (110 * index) + 800, 'easeInQuint', () => {
+								$(this).remove();} );
+							});
+						});
+						this.repeat = true;
+
+			  		}
+		  	}
+		})
 		let imageDataArray = [];
 
 		let canvasCount = 35;
-
-		$('#start-btn').click(function(){
-			html2canvas($('.content')[0]).then(canvas =>{
-				ctx = canvas.getContext('2d');
-				let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-				let pixelArr = imageData.data;
-
-				createBlankImageData(imageData);
-
-				// Put the pixel info of imageDataArray into a weighted Distribution
-				for (let i = 0; i < pixelArr.length; i+=4) {
-					//Find the highest probability that canvas should be in
-					let p = Math.floor((i/pixelArr.length) * canvasCount);
-
-					let a = imageDataArray[weightedRandomDistrib(p)];
-					a[i] = pixelArr[i];
-					a[i+1] = pixelArr[i+1];
-					a[i+2] = pixelArr[i+2];
-					a[i+3] = pixelArr[i+3];
-				}
-
-				//Create canvas for each imageData and append to target element
-				for(let i = 0; i < canvasCount; i++){
-					let c = newCanvasFromImageData(imageDataArray[i], canvas.width, canvas.height);
-					c.classList.add('dust');
-					$('.wrapper').append(c);
-				}
-
-				//Clear all children except the canvas
-				$('.content').children().not('dust').fadeOut(3500);
-
-				//Apply animation
-				$('.dust').each(function(index){
-					animateBlur($(this), 0.8, 800);
-
-					setTimeout(() =>{
-						animateTransform( $(this), 100, -100, chance.integer({min:-15, max: 15 }), 800 + (110 * index) );
-					}, 70 * index);
-
-					// Remove the canvas from DOM tree when faded
-					$(this).delay(70 * index).fadeOut( (110 * index) + 800, 'easeInQuint', () => {$(this).remove();} );
-				});
-			});
-		});
 
 		function weightedRandomDistrib(peak) {
 			let prob = [], seq = [];
