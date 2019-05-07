@@ -5,7 +5,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="icon" type="image/png"  href="images/icon.png" />
-	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
 	<script src="js/html2canvas.min.js"></script>
 
 	
@@ -52,13 +53,29 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 	<script>
+
+		let imageDataArray = [];
+
+		let canvasCount = 35;
+
 		var app = new Vue({
 		  el: '#app',
+		  mounted: function(){
+		  	html2canvas($('.content')[0]).then(canvas =>{
+		  				this.canvas = canvas;
+						let ctx = canvas.getContext('2d');
+						this.imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+						this.loading = false;
+					})
+		  },
 		  data: {
 		    begin: true,
+		    loading:true,
 		    repeat: false,
 		    click: new Audio('audio/click.mp3'),
 		    fade: new Audio('audio/fade.mp3'),
+		    imageData: null,
+		    canvas: null
 		    // undo: new Audio('audio/undo.wav'),
 		  },
 		  methods:{
@@ -69,13 +86,13 @@
 		  	},
 
 		  	snap: async function (){
-					this.click.play();
-			  		html2canvas($('.content')[0]).then(canvas =>{
-						ctx = canvas.getContext('2d');
-						let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-						let pixelArr = imageData.data;
+		  			if (this.loading){
+		  				alert('Still loading, hold on.');
+		  			}else{
+		  				this.click.play();
+						let pixelArr = this.imageData.data;
 
-						createBlankImageData(imageData);
+						createBlankImageData(this.imageData);
 
 						// Put the pixel info of imageDataArray into a weighted Distribution
 						for (let i = 0; i < pixelArr.length; i+=4) {
@@ -91,7 +108,7 @@
 
 						//Create canvas for each imageData and append to target element
 						for(let i = 0; i < canvasCount; i++){
-							let c = newCanvasFromImageData(imageDataArray[i], canvas.width, canvas.height);
+							let c = newCanvasFromImageData(imageDataArray[i], this.canvas.width, this.canvas.height);
 							c.classList.add('dust');
 							$('.wrapper').append(c);
 						}
@@ -112,19 +129,16 @@
 								$(this).remove();
 							});
 						});
-					}).then(() =>{
 						this.fade.play();
 						setTimeout(() =>{
 							this.repeat = true;
 						},3500)
-					});
+		  			}
+					
 
 		  		}
 		  	}
 		})
-		let imageDataArray = [];
-
-		let canvasCount = 35;
 
 		function weightedRandomDistrib(peak) {
 			let prob = [], seq = [];
