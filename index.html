@@ -32,7 +32,8 @@
 			<div class="wrapper">
 				<div class="content">
 					<img src="images/spider.png" alt="burger" width="500">
-					<button class="start-btn" @click="snap">Snap!</button>
+					<button class="start-btn" @click="snap" v-if="!loading">Snap!</button>
+					<button class="start-btn" v-else disabled>Please wait...</button>
 				</div>
 			</div>
 			<div class="hero d-flex justify-content-center align-items-center" v-if="repeat">
