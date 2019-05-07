@@ -59,11 +59,11 @@
 		    repeat: false,
 		    click: new Audio('audio/click.mp3'),
 		    fade: new Audio('audio/fade.mp3'),
-		    undo: new Audio('audio/undo.wav'),
+		    // undo: new Audio('audio/undo.wav'),
 		  },
 		  methods:{
 		  	doOver: function() {
-		  		this.undo.play();
+		  		// this.undo.play();
 		  		$('.content').children().not('dust').fadeIn(2500);
 				this.repeat = false
 		  	},
