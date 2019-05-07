@@ -36,6 +36,7 @@ body {
 	border-radius: 10px;
 	background: url('../images/gauntlet.png') white 15px no-repeat;
 	background-size: 50px;
+	cursor: pointer;
 }
 .repeat{
 	font-size: 36px;
@@ -44,6 +45,7 @@ body {
 	border-radius: 10px;
 	background: url('../images/irongaunt.jpg') #000 15px no-repeat;
 	background-size: 50px;
+	cursor: pointer;
 }
 
 .dust{
@@ -53,5 +55,5 @@ body {
 	display: none;
 }
 .notallowed{
-	cursor: not-allowed;
+	cursor: not-allowed !important;
 }
